@@ -2,7 +2,12 @@
 # SPDX-FileCopyrightText: Copyright contributors to the vLLM project
 
 from vllm import LLM, SamplingParams
-
+import os
+import time
+LOCAL_DIR = os.path.abspath("/share/bigyang/local")
+os.environ["HF_HOME"] = LOCAL_DIR
+os.environ["TRANSFORMERS_OFFLINE"] = "1"
+os.environ["HF_DATASETS_OFFLINE"] = "1"
 # Sample prompts.
 prompts = [
     "Hello, my name is",
@@ -16,7 +21,7 @@ sampling_params = SamplingParams(temperature=0.8, top_p=0.95)
 
 def main():
     # Create an LLM.
-    llm = LLM(model="facebook/opt-125m")
+    llm = LLM(model="meta-llama/Llama-3.1-8B-Instruct")
     # Generate texts from the prompts.
     # The output is a list of RequestOutput objects
     # that contain the prompt, generated text, and other information.

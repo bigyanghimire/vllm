@@ -1,0 +1,17 @@
+Bootstrap: docker
+From: nvidia/cuda:12.9.1-devel-ubuntu22.04
+
+%post
+    # Toolchain only: the vLLM checkout and venv live on the host so they stay editable.
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update
+    # build-essential gives GCC/G++ 11.4 on Ubuntu 22.04 (vLLM needs >= 11.3)
+    apt-get install -y --no-install-recommends build-essential git curl ca-certificates
+    rm -rf /var/lib/apt/lists/*
+
+    # uv, system-wide (the default ~/.local/bin would end up in /root)
+    curl -LsSf https://astral.sh/uv/install.sh | env UV_UNMANAGED_INSTALL=/usr/local/bin sh
+
+%environment
+    export CUDA_HOME=/usr/local/cuda
+    export PATH="${CUDA_HOME}/bin:${PATH}"
